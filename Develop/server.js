@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const uuid = require('./helpers/uuid');
 
+// const { v4: uuidv4 } = require('uuid');
+
 
 const PORT = process.env.PORT || 3001;
 
@@ -27,10 +29,7 @@ app.get('/notes', (req, res) =>
     res.sendFile(path.join(__dirname, 'public/notes.html'))
 );
 
-// Wildcard route to direct users to a 404 page
-app.get('*', (req, res) =>
-    res.sendFile(path.join(__dirname, 'public/index.html'))
-);
+
 
 app.post('/api/notes', (req, res) => {
     console.log(`${req.method} request received to add a note`);
@@ -41,7 +40,7 @@ app.post('/api/notes', (req, res) => {
       const newNote = {
         title,
         text,
-        id: uuid.v4(),
+        id: uuid(),
       };
   
       readAndAppend(newNote, './db/db.json');
@@ -86,9 +85,15 @@ app.get('/api/notes', (req, res) => {
         res.json(notes);
     }).catch((err) => {
         console.error(err);
-        res.json([]);
+        // res.json([]);
     });
 });
+
+
+// Wildcard route to direct users to a 404 page
+app.get('*', (req, res) =>
+    res.sendFile(path.join(__dirname, 'public/index.html'))
+);
 
 app.listen(PORT, () =>
     console.log(`App listening at http://localhost:${PORT} 🚀`)
